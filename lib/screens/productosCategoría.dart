@@ -38,6 +38,10 @@ class ProductosCategoria extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final product = snapshot.data![index];
+                String imageUrl = (product.images != null && product.images!.isNotEmpty)
+                    ? product.images!.first
+                    : 'https://via.placeholder.com/150';
+
                 return Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(
@@ -46,18 +50,16 @@ class ProductosCategoria extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Image.network(
-                          product.imageUrl ?? 'https://via.placeholder.com/150',
+                          imageUrl,
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
                         ),
                       ),
                       SizedBox(height: 8),
-                     
                       Text(
                         product.titulo,
                         textAlign: TextAlign.center,
@@ -67,7 +69,6 @@ class ProductosCategoria extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4),
-                    
                       TextButton(
                         onPressed: () {
                           Navigator.push(

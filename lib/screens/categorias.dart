@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/modules/categories/domain/dto/category.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/modules/categories/useCase/categories_usecase.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/screens/productosCategoría.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/router/routers.dart';
 
 class CategoryScreen extends StatelessWidget {
   final GetUseCaseCategory _useCase = GetUseCaseCategory();
@@ -11,8 +12,14 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Categorías"),
-        backgroundColor: Colors.blue,
-        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, Routers.carrito); 
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Category>>(
         future: _useCase.execute(null),
@@ -22,7 +29,7 @@ class CategoryScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("No hay categorías disponibles"));
+            return Center(child: Text("Las categorías no se encuentran disponibles por el momento"));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,

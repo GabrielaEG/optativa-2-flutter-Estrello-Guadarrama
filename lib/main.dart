@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/router/ListRouters.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/router/routers.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async{
+ /* WidgetsFlutterBinding.ensureInitialized();
+  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear(); */ 
+
   runApp(const MyApp());
+  
+
 }
 
 class MyApp extends StatelessWidget {
