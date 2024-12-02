@@ -3,6 +3,8 @@ import 'package:estrello_gabriela_examen_segundo_parcial/modules/products/domain
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:estrello_gabriela_examen_segundo_parcial/screens/carrito.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/modules/products/useCase/products_visited.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/modules/products/useCase/prodcut_review.dart';
 
 class ProductoDetallado extends StatefulWidget {
   final Product product;
@@ -15,11 +17,49 @@ class ProductoDetallado extends StatefulWidget {
 
 class _ProductoDetalladoState extends State<ProductoDetallado> {
   final TextEditingController _cantidadController = TextEditingController();
+  final VisitedProductsUseCase visitedProductsUseCase = VisitedProductsUseCase();
+  final ProductReviewsUseCase productReviewsUseCase = ProductReviewsUseCase();
+
+  List<Map<String, dynamic>> reviews = [];
+  bool isLoadingReviews = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _markProductVisited();
+    _loadReviews();
+  }
 
   @override
   void dispose() {
     _cantidadController.dispose();
     super.dispose();
+  }
+
+  Future<void> _markProductVisited() async {
+    await visitedProductsUseCase.addProduct({
+      'id': widget.product.id,
+      'nombre': widget.product.titulo,
+      'descripcion': widget.product.descripcion,
+      'precio': widget.product.precio,
+      'stock': widget.product.stock,
+      'images': widget.product.images,
+    });
+  }
+
+  Future<void> _loadReviews() async {
+    try {
+      final fetchedReviews = await productReviewsUseCase.getReviews(widget.product.id);
+      setState(() {
+        reviews = fetchedReviews;
+        isLoadingReviews = false;
+      });
+    } catch (e) {
+      print('Error al cargar las reviews del producto, inténtelo con otro: $e');
+      setState(() {
+        isLoadingReviews = false;
+      });
+    }
   }
 
   void _addToCart() async {
@@ -151,20 +191,24 @@ class _ProductoDetalladoState extends State<ProductoDetallado> {
               ),
             ),
             SizedBox(height: 24),
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Precio \$${widget.product.precio.toStringAsFixed(2)}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Stock ${widget.product.stock ?? 0}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 24),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Precio: \$${widget.product.precio.toStringAsFixed(2)}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Stock disponible: ${widget.product.stock ?? 0}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 2),
+
+           
+            SizedBox(height: 10),
             TextField(
               controller: _cantidadController,
               keyboardType: TextInputType.number,
@@ -173,10 +217,10 @@ class _ProductoDetalladoState extends State<ProductoDetallado> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                hintText: 'Ingrese cantidad',
+                hintText: 'Ingrese la cantidad',
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -193,7 +237,24 @@ class _ProductoDetalladoState extends State<ProductoDetallado> {
                 ),
               ),
             ),
+
+             isLoadingReviews
+                ? CircularProgressIndicator()
+                : reviews.isEmpty
+                    ? Text("No hay reviews disponibles en este momento para este producto, inténtelo más tarde")
+                    : Column(
+                        children: reviews.map((review) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              title: Text(review['user'] ?? 'Usuario anónimo'),
+                              subtitle: Text(review['comment'] ?? 'Comentario no disponible'),
+                            ),
+                          );
+                        }).toList(),
+                      ),
           ],
+          
         ),
       ),
     );

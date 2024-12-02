@@ -3,9 +3,27 @@ import 'package:estrello_gabriela_examen_segundo_parcial/modules/categories/doma
 import 'package:estrello_gabriela_examen_segundo_parcial/modules/categories/useCase/categories_usecase.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/screens/productosCategoría.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/router/routers.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/components/NavigatorBar.dart';
 
-class CategoryScreen extends StatelessWidget {
+class CategoriaPantalla extends StatelessWidget {
   final GetUseCaseCategory _useCase = GetUseCaseCategory();
+
+  void _onNavBarTap(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, Routers.busqueda);
+        break;
+      case 1:
+        Navigator.pushNamed(context, Routers.carrito);
+        break;
+      case 2:
+        Navigator.pushNamed(context, Routers.visitado);
+        break;
+      case 3:
+        Navigator.pushNamed(context, Routers.pefil);
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +34,7 @@ class CategoryScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              Navigator.pushNamed(context, Routers.carrito); 
+              Navigator.pushNamed(context, Routers.carrito);
             },
           ),
         ],
@@ -71,6 +89,10 @@ class CategoryScreen extends StatelessWidget {
             );
           }
         },
+      ),
+      bottomNavigationBar: CustomNavigationBar(
+        currentIndex: 1, 
+        onTap: (index) => _onNavBarTap(context, index),
       ),
     );
   }

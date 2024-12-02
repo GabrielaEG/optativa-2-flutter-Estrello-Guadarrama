@@ -18,4 +18,11 @@ class ProductRepository implements Repository<List<Product>, String> {
     final response = await connection.get<Map<String, dynamic>>('$_baseUrl/$productId');
     return Product.fromJson(response);
   }
+
+  Future<List<Product>> searchProducts(String query) async {
+    Connection connection = Connection();
+    final response = await connection.get<Map<String, dynamic>>('$_baseUrl/search?q=$query');
+    List productsData = response['products'] ?? [];
+    return productsData.map((data) => Product.fromJson(data)).toList();
+  }
 }
