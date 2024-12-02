@@ -7,5 +7,11 @@ class Routers {
   static const productoDetallado = "producto_detallado";
 
   static const carrito = "carrito";
+
+  static const busqueda = "busqueda";
+
+  static const visitado = "visitado";
+
+  static const pefil = "perfil";
   
 }

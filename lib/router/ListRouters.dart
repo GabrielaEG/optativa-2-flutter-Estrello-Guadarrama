@@ -9,6 +9,10 @@ import 'package:estrello_gabriela_examen_segundo_parcial/modules/products/domain
 import 'package:estrello_gabriela_examen_segundo_parcial/router/menu_option/menu_options.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/infrastructure/connection/connection.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/screens/carrito.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/screens/busqueda.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/screens/perfil.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/screens/productosVisitados.dart';
+
 
 final loginRepository = LoginRepository(Connection());
 final loginUseCase = LoginUseCase(loginRepository);
@@ -16,7 +20,10 @@ final loginUseCase = LoginUseCase(loginRepository);
 class ListRouters {
   static final Map<String, Widget Function(BuildContext)> listScreens = {
     Routers.login: (context) => Login(loginUseCase: loginUseCase),
-    Routers.productosCategoria: (context) => CategoryScreen(),
+    Routers.productosCategoria: (context) => CategoriaPantalla(),
+    Routers.pefil: (context) => PerfilPantalla(),
+    Routers.busqueda: (context) => BusquedaPantalla(),
+    Routers.visitado: (context) => ProductosVisitados(),
     Routers.productoDetallado: (context) => ProductoDetallado(
       product: Product(
         id: 1,
@@ -39,7 +46,7 @@ class ListRouters {
     ),
     MenuOption(
       route: Routers.productosCategoria,
-      screen: CategoryScreen(),
+      screen: CategoriaPantalla(),
       icon: Icons.category,
       description: "Pantalla de Productos por Categoría",
     ),

@@ -1,8 +1,10 @@
+import 'package:estrello_gabriela_examen_segundo_parcial/router/routers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:estrello_gabriela_examen_segundo_parcial/modules/products/domain/dto/product.dart';
 import 'package:estrello_gabriela_examen_segundo_parcial/screens/productoDetallado.dart';
+import 'package:estrello_gabriela_examen_segundo_parcial/components/NavigatorBar.dart';
 
 class Carrito extends StatefulWidget {
   @override
@@ -39,7 +41,7 @@ class _CarritoState extends State<Carrito> {
 
     setState(() {
       cartItems = items;
-      totalTodo = total; 
+      totalTodo = total;
     });
   }
 
@@ -59,8 +61,24 @@ class _CarritoState extends State<Carrito> {
       total += item['total'];
     }
     setState(() {
-      totalTodo = total; 
+      totalTodo = total;
     });
+  }
+
+  void _onNavBarTap(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, Routers.busqueda);
+        break;
+      case 1:
+        break;
+      case 2:
+        Navigator.pushNamed(context, Routers.visitado);
+        break;
+      case 3:
+        Navigator.pushNamed(context, Routers.pefil);
+        break;
+    }
   }
 
   @override
@@ -133,6 +151,10 @@ class _CarritoState extends State<Carrito> {
                 );
               },
             ),
+      bottomNavigationBar: CustomNavigationBar(
+        currentIndex: 1, 
+        onTap: _onNavBarTap,
+      ),
     );
   }
 }
